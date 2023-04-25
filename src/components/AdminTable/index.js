@@ -27,6 +27,7 @@ function AdminTable() {
   const [searchQuery, setSearchQuery] = useState("");
   //const [filteredStudentList, setFilteredStudentList] = useState([]);
   const ITEMS_PER_PAGE = 5;
+  console.log(sendMailInfo);
 
   const onclickInvite = (email) => {
     toggleInviteModal();

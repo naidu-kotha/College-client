@@ -1,3 +1,4 @@
+// eslint-disable-next-line
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LoginPage from "./components/LoginPage";
