@@ -17,6 +17,7 @@ import axios from "axios";
 function Quiz() {
   const navigate = useNavigate();
   const testName = "SampleTest3";
+  Cookies.set("testId", testName, { expires: 10 });
   const today = new Date();
 
   const questions = [
@@ -122,7 +123,7 @@ function Quiz() {
     };
     console.log(submitDetails);
     axios
-      .post("/studentscore", submitDetails)
+      .patch("/studentscore", submitDetails)
       .then((response) => {
         if (response.statusText === "OK") {
           console.log(response.data);

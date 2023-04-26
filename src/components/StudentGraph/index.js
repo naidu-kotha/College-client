@@ -58,16 +58,16 @@ const Charts = () => {
             fontSize={10}
           />
           <YAxis
-            width={60}
+            width={10}
             tickFormatter={DataFormatter}
             tick={{
               stroke: "gray",
               strokeWidth: 0.5,
-              fontSize: 10,
+              fontSize: "15",
             }}
             domain={[0, 5]}
-            interval={0}
           />
+
           <Legend
             wrapperStyle={{
               padding: 20,

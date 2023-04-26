@@ -16,17 +16,20 @@ import "react-toastify/dist/ReactToastify.css";
 import "./index.css";
 import axios from "axios";
 import Sidebar1 from "../SampleSideBar";
+import Cookies from "js-cookie";
 
 function AdminTable() {
   const [modalShow, setModalShow] = React.useState(false);
   const [inviteModal, setInviteModal] = useState(false);
   const [studentList, setStudentList] = useState([]);
+  const [showToast, setShowToast] = useState(false);
 
   const [activePage, setActivePage] = useState(1);
   const [selectedMail, setSelectedMail] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   //const [filteredStudentList, setFilteredStudentList] = useState([]);
   const ITEMS_PER_PAGE = 5;
+  const testId = Cookies.get("testId");
 
   const onclickInvite = (email) => {
     toggleInviteModal();
@@ -37,7 +40,7 @@ function AdminTable() {
     const email = selectedMail;
     const link = "http://192.168.1.249:3000";
     console.log(email, link);
-    const body = { to: email, link };
+    const body = { to: email, link, testId };
     console.log(body);
     axios
       .post("/sendmail", body)
@@ -45,6 +48,7 @@ function AdminTable() {
         console.log(response.data);
         if (response.statusText === "OK") {
           toast.success("Mail sent successfully ");
+          setShowToast(!showToast);
         }
       })
       .catch((e) => {
@@ -87,7 +91,7 @@ function AdminTable() {
       .catch((e) => {
         console.log(e);
       });
-  }, []);
+  }, [showToast]);
 
   const handleSearch = (event) => {
     setSearchQuery(event.target.value);
