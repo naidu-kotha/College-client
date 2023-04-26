@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Profile from "../Profile";
 import { useNavigate } from "react-router-dom";
 import {
   Form,
@@ -196,55 +197,58 @@ function Quiz() {
   };
 
   return (
-    <Container
-      fluid
-      className="quiz-bg-container d-flex flex-column justify-content-center align-items-center"
-    >
-      <Form
-        className="d-flex flex-column question-form-container"
-        onSubmit={handleSubmit}
+    <Container fluid>
+      <Profile />
+      <Container
+        fluid
+        className="quiz-bg-container d-flex flex-column justify-content-center align-items-center"
       >
-        {/* {totalScore} */}
-        <h1 className="question-heading">{currentQuestion.text}</h1>
-        {currentQuestion.options.map((option) => (
-          <Form.Check
-            key={option.id}
-            type="radio"
-            label={option.text}
-            name={currentQuestion.id}
-            value={option.id}
-            onChange={handleOptionChange}
-            className="question-options"
-            checked={selectedOption === option.id}
-          />
-        ))}
-        <div className="mt-2 d-flex justify-content-between">
-          <Button
-            className="form-btns"
-            variant="primary"
-            size={"lg"}
-            onClick={handlePreviousQuestion}
-            disabled={questionIndex === 0}
-          >
-            <i class="bi bi-arrow-left"></i>
-          </Button>
-          {questionIndex < questions.length - 1 ? (
+        <Form
+          className="d-flex flex-column question-form-container"
+          onSubmit={handleSubmit}
+        >
+          {/* {totalScore} */}
+          <h1 className="question-heading">{currentQuestion.text}</h1>
+          {currentQuestion.options.map((option) => (
+            <Form.Check
+              key={option.id}
+              type="radio"
+              label={option.text}
+              name={currentQuestion.id}
+              value={option.id}
+              onChange={handleOptionChange}
+              className="question-options"
+              checked={selectedOption === option.id}
+            />
+          ))}
+          <div className="mt-2 d-flex justify-content-between">
             <Button
-              size={"lg"}
-              type="button"
               className="form-btns"
-              onClick={handleNextQuestion}
+              variant="primary"
+              size={"lg"}
+              onClick={handlePreviousQuestion}
+              disabled={questionIndex === 0}
             >
-              <i class="bi bi-arrow-right"></i>
+              <i class="bi bi-arrow-left"></i>
             </Button>
-          ) : (
-            <Button className="primary" size={"lg"} type="submit">
-              Submit
-            </Button>
-          )}
-        </div>
-      </Form>
-      {scoreModal()}
+            {questionIndex < questions.length - 1 ? (
+              <Button
+                size={"lg"}
+                type="button"
+                className="form-btns"
+                onClick={handleNextQuestion}
+              >
+                <i class="bi bi-arrow-right"></i>
+              </Button>
+            ) : (
+              <Button className="primary" size={"lg"} type="submit">
+                Submit
+              </Button>
+            )}
+          </div>
+        </Form>
+        {scoreModal()}
+      </Container>
     </Container>
   );
 }

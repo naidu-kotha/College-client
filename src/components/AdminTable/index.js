@@ -21,13 +21,12 @@ function AdminTable() {
   const [modalShow, setModalShow] = React.useState(false);
   const [inviteModal, setInviteModal] = useState(false);
   const [studentList, setStudentList] = useState([]);
-  const [sendMailInfo, setSendMailInfo] = useState("");
+
   const [activePage, setActivePage] = useState(1);
   const [selectedMail, setSelectedMail] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   //const [filteredStudentList, setFilteredStudentList] = useState([]);
   const ITEMS_PER_PAGE = 5;
-  console.log(sendMailInfo);
 
   const onclickInvite = (email) => {
     toggleInviteModal();
@@ -46,11 +45,9 @@ function AdminTable() {
         console.log(response.data);
         if (response.statusText === "OK") {
           toast.success("Mail sent successfully ");
-          setSendMailInfo(response.data);
         }
       })
       .catch((e) => {
-        setSendMailInfo(e);
         toast.warning("Mail not sent");
       });
     toggleInviteModal();
@@ -149,7 +146,6 @@ function AdminTable() {
   };
   return (
     <Container fluid className="d-flex flex-row">
-      {/* <SideBar /> */}
       <Sidebar1 />
       <Container fluid className="p-5 admin-table-container">
         <Container
@@ -164,6 +160,13 @@ function AdminTable() {
           >
             Add Student
           </Button>
+          {/* <Button
+            className="admin-addstudent-btn"
+            variant="primary"
+            onClick={() => setModalShow(true)}
+          >
+            Add Student
+          </Button> */}
         </Container>
 
         <MyVerticallyCenteredModal
@@ -208,12 +211,18 @@ function AdminTable() {
                     {new Date(item.date_of_birth).toLocaleDateString("en-GB")}
                   </td>
                   <td>
-                    <Button
-                      variant="primary"
-                      onClick={() => onclickInvite(item.email)}
-                    >
-                      Invite
-                    </Button>
+                    {item.invite === false ? (
+                      <Button
+                        variant="primary"
+                        onClick={() => onclickInvite(item.email)}
+                      >
+                        Invite
+                      </Button>
+                    ) : (
+                      <Button variant="primary" disabled>
+                        Invite
+                      </Button>
+                    )}
                   </td>
                 </tr>
               ))}
@@ -231,7 +240,6 @@ function AdminTable() {
 }
 export default AdminTable;
 
-// import React, { useState, useEffect } from "react";
 // import Table from "react-bootstrap/Table";
 // import MyVerticallyCenteredModal from "../AddStudentForm";
 // import SideBar from "../SideBar";

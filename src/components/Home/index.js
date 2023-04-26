@@ -8,6 +8,7 @@ import "./index.css";
 
 function Home() {
   const [studentScoresList, setStudentScoresList] = useState([]);
+  const [studentList, setStudentList] = useState([]);
   //const [passedTests, setPassedTests] = useState(0);
   const role = Cookies.get("role");
   const { email } = JSON.parse(Cookies.get("userDetails"));
@@ -25,6 +26,27 @@ function Home() {
         console.log(e);
       });
   }, []);
+  const totalStudents = studentList.length;
+
+  const totalInvitesSentObject = studentList.filter(
+    (item) => item.invite === true
+  );
+  const totalInvitesSentCount = totalInvitesSentObject.length;
+
+  const totalNonInvites = totalStudents - totalInvitesSentCount;
+
+  useEffect(() => {
+    axios
+      .get("/getstudents")
+      .then((response) => {
+        console.log(response);
+        setStudentList(response.data);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }, []);
+
   const totalTests = studentScoresList.length;
   const totalpassedTestsCount = studentScoresList.filter(
     (item) => item.test_score > 2
@@ -49,7 +71,11 @@ function Home() {
                 ) : (
                   <h5>Total Invites</h5>
                 )}
-                {role === "student" ? <h1>{totalTests}</h1> : <h1>18 </h1>}
+                {role === "student" ? (
+                  <h1>{totalTests}</h1>
+                ) : (
+                  <h1>{totalInvitesSentCount} </h1>
+                )}
               </Card.Body>
             </Card>
             <Card className="home-invites-card mx-3">
@@ -60,7 +86,11 @@ function Home() {
                 ) : (
                   <h5>Total Non Invites</h5>
                 )}
-                {role === "student" ? <h1>{totalPassedTest}</h1> : <h1>150</h1>}
+                {role === "student" ? (
+                  <h1>{totalPassedTest}</h1>
+                ) : (
+                  <h1>{totalNonInvites}</h1>
+                )}
               </Card.Body>
             </Card>
           </Container>

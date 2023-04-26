@@ -9,6 +9,7 @@ import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import AdminProtectedRoute from "./components/AdminProtectedRoute/AdminProtectedRoute";
 import Sidebar1 from "./components/SampleSideBar";
 import StudentTable from "./components/studentTable";
+//import AdminTable2 from "./sampleTable";
 
 import "./index.css";
 import Cookies from "js-cookie";
@@ -19,9 +20,8 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/km" exact element={<Sidebar1 />} />
+        {/* <Route path="/km" exact element={<AdminTable2 />} /> */}
         <Route path="/studentmarks" exact element={<StudentTable />} />
-
         <Route
           path="/"
           exact

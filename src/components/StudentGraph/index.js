@@ -40,7 +40,7 @@ const Charts = () => {
       fluid
       className="charts-bg-container d-flex flex-row justify-content-center"
     >
-      <ResponsiveContainer width="40%" height={600}>
+      <ResponsiveContainer width="50%" height={300}>
         <BarChart
           data={studentScoresList}
           margin={{
@@ -53,26 +53,33 @@ const Charts = () => {
             tick={{
               stroke: "gray",
               strokeWidth: 0.5,
-              fontSize: "13px",
             }}
             interval={0}
+            fontSize={10}
           />
           <YAxis
+            width={60}
             tickFormatter={DataFormatter}
             tick={{
               stroke: "gray",
               strokeWidth: 0.5,
-              fontSize: "13px",
+              fontSize: 10,
             }}
             domain={[0, 5]}
             interval={0}
           />
           <Legend
             wrapperStyle={{
-              padding: 50,
+              padding: 20,
             }}
           />
-          <Bar dataKey="test_score" name="TESTS" fill="#193be3" barSize={50} />
+          <Bar
+            dataKey="test_score"
+            name="TESTS"
+            fill="#193be3"
+            minBarSize={20}
+            maxBarSize={60}
+          />
         </BarChart>
       </ResponsiveContainer>
     </Container>

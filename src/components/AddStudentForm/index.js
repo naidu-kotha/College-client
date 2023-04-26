@@ -35,6 +35,7 @@ function MyVerticallyCenteredModal(props) {
         .then((response) => {
           setErrorMsg("");
           if (response.statusText === "OK") {
+            formik.resetForm();
             toast.success("Student added successfully");
             props.onHide(false);
             navigate("/admintable", { replace: true });
@@ -142,7 +143,7 @@ function MyVerticallyCenteredModal(props) {
                     submit
                   </Button>
                 </Col>
-                <Form.Text>{errorMsg}</Form.Text>
+                <Form.Text className="text-danger">{errorMsg}</Form.Text>
                 <ToastContainer />
               </Row>
             </Form>

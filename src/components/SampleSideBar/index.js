@@ -17,10 +17,6 @@ const Sidebar1 = () => {
   const role = Cookies.get("role");
   //const { fullname, email } = JSON.parse(Cookies.get("userDetails"));
   const navigate = useNavigate();
-  // const today = new Date();
-  // const date = today.getDate();
-  // const month = today.getMonth() + 1;
-  // const year = today.getFullYear();
 
   const logoutUser = () => {
     Cookies.remove("userDetails");
@@ -123,15 +119,10 @@ const Sidebar1 = () => {
               </>
             )}
             <CDBSidebarFooter style={{ textAlign: "center" }}>
-              <Container fluid className="sidebar2-footer">
-                {/* <p>{fullname}</p>
-                <p>{email}</p>
-                <p>{date}-{month}-{year}</p> */}
-              </Container>
+              <Container fluid className="sidebar2-footer"></Container>
             </CDBSidebarFooter>
           </CDBSidebar>
         </Col>
-        {/*  */}
       </Row>
     </Container>
   );
