@@ -22,6 +22,7 @@ const Sidebar1 = () => {
     Cookies.remove("userDetails");
     Cookies.remove("role");
     Cookies.remove("jwt_token");
+    Cookies.remove("testId");
     navigate("/login", { replace: true });
   };
 

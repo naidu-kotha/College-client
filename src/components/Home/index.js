@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Container, Card } from "react-bootstrap";
 import Sidebar1 from "../SampleSideBar";
+import AdminGraph from "../../AdminGraph";
 import Cookies from "js-cookie";
 import axios from "axios";
 import Charts from "../StudentGraph";
@@ -95,7 +96,7 @@ function Home() {
             </Card>
           </Container>
           <div className="home-chartss-align d-flex flex-row">
-            <Charts />
+            {role === "student" ? <Charts /> : <AdminGraph />}
           </div>
         </Container>
       </Container>

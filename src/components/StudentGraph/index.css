@@ -8,3 +8,16 @@
     margin-top: 100px;
   }
 }
+
+.custom-tooltip {
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  padding: 15px;
+  border-radius: 5px;
+  font-size: 14px;
+  display: "flex";
+}
+
+.custom-tooltip p {
+  margin: 0;
+}

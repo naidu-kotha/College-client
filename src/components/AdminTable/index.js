@@ -29,6 +29,8 @@ function AdminTable() {
   const [selectedMail, setSelectedMail] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [isChecked, setIsChecked] = useState(false);
+  const [sortColumn, setSortColumn] = useState(null);
+  const [sortOrder, setSortOrder] = useState(null);
   const ITEMS_PER_PAGE = 5;
   const testId = Cookies.get("testId");
   const today = new Date().toLocaleDateString("en-GB");
@@ -167,6 +169,27 @@ function AdminTable() {
     return [prevButton, pageNumbers, nextButton];
   };
 
+  const handleSort = (column) => {
+    if (sortColumn === column) {
+      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+    } else {
+      setSortColumn(column);
+      setSortOrder("asc");
+    }
+  };
+
+  const sortedData = sortColumn
+    ? currentItems.sort((a, b) => {
+        let comparison = 0;
+        if (typeof a[sortColumn] === "string") {
+          comparison = a[sortColumn].localeCompare(b[sortColumn]);
+        } else if (typeof a[sortColumn] === "number") {
+          comparison = a[sortColumn] - b[sortColumn];
+        }
+        return sortOrder === "asc" ? comparison : -comparison;
+      })
+    : currentItems;
+
   return (
     <Container fluid className="d-flex flex-row">
       <Sidebar1 />
@@ -229,16 +252,61 @@ function AdminTable() {
             >
               <thead>
                 <tr>
-                  <th>ID</th>
-                  <th>Student Full Name</th>
-                  <th>Gender</th>
-                  <th>Email</th>
-                  <th>Date of Birth</th>
+                  <th onClick={() => handleSort("id")}>
+                    ID{" "}
+                    {sortColumn === "id" && (
+                      <i
+                        className={`fa fa-arrow-${
+                          sortOrder === "asc" ? "up" : "down"
+                        }`}
+                      />
+                    )}
+                  </th>
+                  <th onClick={() => handleSort("fullname")}>
+                    Student Full Name{" "}
+                    {sortColumn === "fullname" && (
+                      <i
+                        className={`fa fa-arrow-${
+                          sortOrder === "asc" ? "up" : "down"
+                        }`}
+                      />
+                    )}
+                  </th>
+                  <th onClick={() => handleSort("gender")}>
+                    Gender{" "}
+                    {sortColumn === "gender" && (
+                      <i
+                        className={`fa fa-arrow-${
+                          sortOrder === "asc" ? "up" : "down"
+                        }`}
+                      />
+                    )}
+                  </th>
+                  <th onClick={() => handleSort("email")}>
+                    Email{" "}
+                    {sortColumn === "email" && (
+                      <i
+                        className={`fa fa-arrow-${
+                          sortOrder === "asc" ? "up" : "down"
+                        }`}
+                      />
+                    )}
+                  </th>
+                  <th onClick={() => handleSort("date_of_birth")}>
+                    Date of Birth{" "}
+                    {sortColumn === "date_of_birth" && (
+                      <i
+                        className={`fa fa-arrow-${
+                          sortOrder === "asc" ? "up" : "down"
+                        }`}
+                      />
+                    )}
+                  </th>
                   <th>Action</th>
                 </tr>
               </thead>
               <tbody>
-                {currentItems.map((item) => (
+                {sortedData.map((item) => (
                   <tr key={item.id}>
                     <td>{item.id}</td>
                     <td>{item.fullname}</td>
@@ -248,16 +316,16 @@ function AdminTable() {
                       {new Date(item.date_of_birth).toLocaleDateString("en-GB")}
                     </td>
                     <td>
-                      {item.invite === false ? (
+                      {!item.invite && (
                         <Button
                           variant="primary"
                           onClick={() => onclickInvite(item.email)}
-                          key={item.id}
                         >
                           Invite
                         </Button>
-                      ) : (
-                        <Button variant="primary" disabled key={item.id}>
+                      )}
+                      {item.invite && (
+                        <Button variant="primary" disabled>
                           Invite
                         </Button>
                       )}

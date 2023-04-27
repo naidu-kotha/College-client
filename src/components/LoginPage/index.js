@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import axios from "axios";
@@ -30,8 +30,14 @@ const validationSchema = Yup.object().shape({
 const LoginPage = () => {
   const [errorMsg, setErrorMsg] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const userToken = Cookies.get("jwt_token");
+    if (userToken) {
+      navigate("/");
+    }
+  }, [navigate]);
 
   const formik = useFormik({
     initialValues: {

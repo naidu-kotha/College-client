@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import Cookies from "js-cookie";
+// import Cookies from "js-cookie";
 import { Container } from "react-bootstrap";
 import "./index.css";
 import {
@@ -11,48 +11,22 @@ import {
   Legend,
   ResponsiveContainer,
   Tooltip,
-  // LabelList,
 } from "recharts";
-import { isEmptyArray } from "formik";
 
-const Charts = () => {
-  const { email } = JSON.parse(Cookies.get("userDetails"));
-  const data = {
-    email: email,
-  };
-
-  const [studentScoresList, setStudentScoresList] = useState([]);
+const AdminGraph = () => {
+  const [studentList, setStudentList] = useState([]);
 
   useEffect(() => {
     axios
-      .post("/getscore", data)
+      .post("/getstudentscount/")
       .then((response) => {
         console.log(response);
-        setStudentScoresList(response.data);
+        setStudentList(response.data.rows);
       })
       .catch((e) => {
         console.log(e);
       });
   }, []);
-
-  const CustomTooltip = ({ active, payload, label }) => {
-    // console.log(active, payload, payload.length);
-    if (active && payload) {
-      if (payload[0].value === null) {
-        return (
-          <div className="custom-tooltip">
-            <p>{`${label} : Not Attempted`}</p>
-          </div>
-        );
-      }
-      return (
-        <div className="custom-tooltip">
-          <p>{`${label} : ${payload[0].value}`}</p>
-        </div>
-      );
-    }
-    return null;
-  };
 
   return (
     <Container
@@ -61,12 +35,12 @@ const Charts = () => {
     >
       <ResponsiveContainer width="50%" height={300}>
         <BarChart
-          data={studentScoresList}
+          data={studentList}
           margin={{
             top: 10,
           }}
         >
-          <Tooltip content={CustomTooltip} filterNull={false} />
+          <Tooltip />
           <XAxis
             dataKey="test_id"
             tick={{
@@ -85,7 +59,7 @@ const Charts = () => {
             }}
             domain={[
               0,
-              Math.max(...studentScoresList.map((data) => data.test_score)),
+              Math.max(...studentList.map((data) => data.total_passed)) + 1,
             ]}
             interval={0}
           />
@@ -95,8 +69,8 @@ const Charts = () => {
             }}
           />
           <Bar
-            dataKey="test_score"
-            name="SCORE"
+            dataKey="total_passed"
+            name="QUALIFIED STUDENTS"
             fill="#193be3"
             minBarSize={20}
             maxBarSize={60}
@@ -107,4 +81,4 @@ const Charts = () => {
   );
 };
 
-export default Charts;
+export default AdminGraph;

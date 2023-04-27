@@ -5,6 +5,7 @@ import LoginPage from "./components/LoginPage";
 import Home from "./components/Home";
 import AdminTable from "./components/AdminTable";
 import Quiz from "./components/Questions";
+import NotFound from "./components/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import AdminProtectedRoute from "./components/AdminProtectedRoute/AdminProtectedRoute";
 
@@ -21,22 +22,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* <Route path="/studentmarks" exact element={<StudentTable />} /> */}
-        <Route
-          path="/studentmarks"
-          exact
-          element={
-            role === "student" ? (
-              <ProtectedRoute>
-                <StudentTable />
-              </ProtectedRoute>
-            ) : (
-              <AdminProtectedRoute>
-                <Home />
-              </AdminProtectedRoute>
-            )
-          }
-        />
+        <Route path="/login" exact element={<LoginPage />} />
         <Route
           path="/"
           exact
@@ -52,15 +38,26 @@ function App() {
             )
           }
         />
-        <Route path="/login" exact element={<LoginPage />} />
+
+        <Route
+          path="/studentmarks"
+          exact
+          element={
+            role === "student" ? (
+              <ProtectedRoute>
+                <StudentTable />
+              </ProtectedRoute>
+            ) : (
+              <NotFound />
+            )
+          }
+        />
         <Route
           path="/admintable"
           exact
           element={
             role !== "admin" ? (
-              <ProtectedRoute>
-                <AdminTable />
-              </ProtectedRoute>
+              <NotFound />
             ) : (
               <AdminProtectedRoute>
                 <AdminTable />
@@ -83,6 +80,7 @@ function App() {
             )
           }
         />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );
