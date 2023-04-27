@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Profile from "../Profile";
+//import Profile from "../Profile";
 import { useNavigate } from "react-router-dom";
 import {
   Form,
@@ -16,7 +16,7 @@ import axios from "axios";
 
 function Quiz() {
   const navigate = useNavigate();
-  const testName = "SampleTest3";
+  const testName = "Test-2";
   Cookies.set("testId", testName, { expires: 10 });
 
   const questions = [
@@ -87,9 +87,7 @@ function Quiz() {
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const userDetails = JSON.parse(Cookies.get("userDetails"));
-  const { email } = userDetails;
-
+  const email = Cookies.get("email");
   const handleOptionChange = (event) => {
     // console.log(event.target);
     setSelectedOption(event.target.value);
@@ -125,6 +123,9 @@ function Quiz() {
       .then((response) => {
         if (response.statusText === "OK") {
           console.log(response.data);
+          Cookies.remove("jwt_token");
+          Cookies.remove("email");
+          navigate("/submitsuccess", { replace: true });
         }
       })
       .catch((e) => {
@@ -134,8 +135,6 @@ function Quiz() {
           setErrorMsg("you have already completed this test");
         }
       });
-
-    navigate("/", { replace: true });
   };
 
   const handlePreviousQuestion = () => {
@@ -148,26 +147,6 @@ function Quiz() {
   };
 
   useEffect(() => {
-    // const newAnswer = { [currentQuestion.id]: selectedOption };
-    // const updatedAnswerObj = { ...answersObj, ...newAnswer };
-
-    // setAnswersObj(updatedAnswerObj);
-    // setSelectedOption(null);
-
-    // let score = 0;
-
-    // Object.keys(answersObj).forEach((questionId) => {
-    //   const answer = answersObj[questionId];
-
-    //   const question = questions.find((q) => q.id === parseInt(questionId));
-
-    //   if (question.correctAnswer === answer) {
-    //     score++;
-    //   }
-    // });
-
-    // setTotalScore(score);
-
     setCurrentQuestion(questions[questionIndex]);
     setSelectedOption(answersObj[questionIndex + 1] || null);
   }, [questionIndex]);
@@ -188,7 +167,6 @@ function Quiz() {
       <Modal centered size="xs" show={isModalOpen} onHide={toggleModal}>
         <ModalHeader closeButton></ModalHeader>
         <ModalBody className="d-flex flex-column justify-content-center align-items-center">
-          {/* <h1>Hi {userDetails.fullname}</h1> */}
           <h1>Score: {totalScore}</h1>
         </ModalBody>
       </Modal>
@@ -196,40 +174,41 @@ function Quiz() {
   };
 
   return (
-    <Container fluid>
-      {/* <Profile /> */}
+    <Container fluid className="quiz  -total-container">
       <Container
         fluid
         className="quiz-bg-container d-flex flex-column justify-content-center align-items-center"
       >
         <Form
-          className="d-flex flex-column question-form-container"
+          className="d-flex flex-row justify-content-center align-items-center question-form-container"
           onSubmit={handleSubmit}
         >
-          {/* {totalScore} */}
-          <h1 className="question-heading">{currentQuestion.text}</h1>
-          {currentQuestion.options.map((option) => (
-            <Form.Check
-              key={option.id}
-              type="radio"
-              label={option.text}
-              name={currentQuestion.id}
-              value={option.id}
-              onChange={handleOptionChange}
-              className="question-options"
-              checked={selectedOption === option.id}
-            />
-          ))}
+          <Button
+            className="form-btns"
+            variant="primary"
+            size={"lg"}
+            onClick={handlePreviousQuestion}
+            disabled={questionIndex === 0}
+          >
+            <i className="bi bi-arrow-left"></i>
+          </Button>
+          <Container fluid className="m-5">
+            <h1 className="question-heading">{currentQuestion.text}</h1>
+            {currentQuestion.options.map((option) => (
+              <Form.Check
+                key={option.id}
+                type="radio"
+                label={option.text}
+                name={currentQuestion.id}
+                value={option.id}
+                onChange={handleOptionChange}
+                className="question-options"
+                checked={selectedOption === option.id}
+              />
+            ))}
+          </Container>
+
           <div className="mt-2 d-flex justify-content-between">
-            <Button
-              className="form-btns"
-              variant="primary"
-              size={"lg"}
-              onClick={handlePreviousQuestion}
-              disabled={questionIndex === 0}
-            >
-              <i class="bi bi-arrow-left"></i>
-            </Button>
             {questionIndex < questions.length - 1 ? (
               <Button
                 size={"lg"}
@@ -237,7 +216,7 @@ function Quiz() {
                 className="form-btns"
                 onClick={handleNextQuestion}
               >
-                <i class="bi bi-arrow-right"></i>
+                <i className="bi bi-arrow-right"></i>
               </Button>
             ) : (
               <Button className="primary" size={"lg"} type="submit">

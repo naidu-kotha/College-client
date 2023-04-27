@@ -14,6 +14,8 @@ import MyVerticallyCenteredModal from "../AddStudentForm";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./index.css";
+import { AiOutlineDelete } from "react-icons/ai";
+import { format } from "date-fns";
 import axios from "axios";
 import Sidebar1 from "../SampleSideBar";
 import Spinner from "react-bootstrap/Spinner";
@@ -33,7 +35,7 @@ function AdminTable() {
   const [sortOrder, setSortOrder] = useState(null);
   const ITEMS_PER_PAGE = 5;
   const testId = Cookies.get("testId");
-  const today = new Date().toLocaleDateString("en-GB");
+  const today = format(new Date(), "yyyy-MM-dd");
 
   const onclickInvite = (email) => {
     toggleInviteModal();
@@ -272,16 +274,7 @@ function AdminTable() {
                       />
                     )}
                   </th>
-                  <th onClick={() => handleSort("gender")}>
-                    Gender{" "}
-                    {sortColumn === "gender" && (
-                      <i
-                        className={`fa fa-arrow-${
-                          sortOrder === "asc" ? "up" : "down"
-                        }`}
-                      />
-                    )}
-                  </th>
+                  <th>Gender</th>
                   <th onClick={() => handleSort("email")}>
                     Email{" "}
                     {sortColumn === "email" && (
@@ -303,6 +296,7 @@ function AdminTable() {
                     )}
                   </th>
                   <th>Action</th>
+                  <th>Delete</th>
                 </tr>
               </thead>
               <tbody>
@@ -329,6 +323,11 @@ function AdminTable() {
                           Invite
                         </Button>
                       )}
+                    </td>
+                    <td>
+                      <Button variant="none">
+                        <AiOutlineDelete size={22} />
+                      </Button>
                     </td>
                   </tr>
                 ))}

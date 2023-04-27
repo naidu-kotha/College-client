@@ -32,7 +32,7 @@ function MyVerticallyCenteredModal(props) {
       fullname: "",
       email: "",
       dateOfBirth: "",
-      gender: "",
+      gender: "male",
     },
     validationSchema: SignupSchema,
     onSubmit: (values) => {

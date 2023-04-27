@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   CDBSidebar,
   CDBSidebarContent,
@@ -95,11 +95,11 @@ const Sidebar1 = () => {
                         Dashboard
                       </CDBSidebarMenuItem>
                     </NavLink>
-                    <NavLink exact to="/quiz" activeClassName="activeClicked">
+                    {/* <NavLink exact to="/quiz" activeClassName="activeClicked">
                       <CDBSidebarMenuItem icon="table">
                         Start Exam
                       </CDBSidebarMenuItem>
-                    </NavLink>
+                    </NavLink> */}
                     <NavLink
                       exact
                       to="/studentmarks"

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Container, Card } from "react-bootstrap";
 import Sidebar1 from "../SampleSideBar";
-import AdminGraph from "../../AdminGraph";
+import AdminGraph from "../AdminGraph";
 import Cookies from "js-cookie";
 import axios from "axios";
 import Charts from "../StudentGraph";

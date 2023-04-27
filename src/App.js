@@ -1,6 +1,6 @@
 // eslint-disable-next-line
 import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import LoginPage from "./components/LoginPage";
 import Home from "./components/Home";
 import AdminTable from "./components/AdminTable";
@@ -8,6 +8,8 @@ import Quiz from "./components/Questions";
 import NotFound from "./components/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import AdminProtectedRoute from "./components/AdminProtectedRoute/AdminProtectedRoute";
+import QuizProtectedRoute from "./components/QuizProtectedRoute";
+import SubmitPage from "./components/SubmitPage";
 
 import StudentTable from "./components/studentTable";
 
@@ -48,7 +50,7 @@ function App() {
                 <StudentTable />
               </ProtectedRoute>
             ) : (
-              <NotFound />
+              <Navigate to="/notfound" />
             )
           }
         />
@@ -61,25 +63,21 @@ function App() {
                 <AdminTable />
               </AdminProtectedRoute>
             ) : (
-              <NotFound />
+              <Navigate to="/notfound" />
             )
           }
         />
         <Route
           path="/quiz"
-          exact
           element={
-            role !== "admin" ? (
-              <ProtectedRoute>
-                <Quiz />
-              </ProtectedRoute>
-            ) : (
-              <AdminProtectedRoute>
-                <Quiz />
-              </AdminProtectedRoute>
-            )
+            <QuizProtectedRoute>
+              <Quiz />
+            </QuizProtectedRoute>
           }
         />
+        <Route path="/submitsuccess" exact element={<SubmitPage />} />
+        <Route path="/notfound" element={<NotFound />} />
+
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
