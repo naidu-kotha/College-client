@@ -16,6 +16,11 @@ button:hover {
 .admin-table-search-input{
   width: 250px;
 }
+.admin-table-checkbox-input{
+  width: 250px;
+  margin-left: 30px;
+  font-size: 20px;
+}
 .invite-btn {
     font-size: 16px;
     padding: 5px 10px;
@@ -63,5 +68,14 @@ button:hover {
   }
 
   
+.spinner-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
 
-  
+  /* transform: translate(-50%, -50%); */
+}
+.spinner{
+  width: 30px;
+  height: 30px;
+}

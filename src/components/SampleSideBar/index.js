@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   CDBSidebar,
   CDBSidebarContent,
@@ -29,7 +29,11 @@ const Sidebar1 = () => {
     <Container fluid className="sidebar2-container">
       <Row>
         <Col sm={4} xs={6} md={2}>
-          <CDBSidebar textColor="#fff" backgroundColor="#333">
+          <CDBSidebar
+            //className="toggled"
+            textColor="#fff"
+            backgroundColor="#333"
+          >
             {role === "admin" ? (
               <>
                 <CDBSidebarHeader
@@ -74,7 +78,7 @@ const Sidebar1 = () => {
             ) : (
               <>
                 <CDBSidebarHeader
-                  prefix={<i className="fa fa-bars fa-large"></i>}
+                  prefix={<i className="fa fa-bars fa-large toggled"></i>}
                 >
                   <span
                     className="text-decoration-none"

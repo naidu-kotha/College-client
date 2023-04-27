@@ -7,8 +7,9 @@ import AdminTable from "./components/AdminTable";
 import Quiz from "./components/Questions";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import AdminProtectedRoute from "./components/AdminProtectedRoute/AdminProtectedRoute";
-import Sidebar1 from "./components/SampleSideBar";
+
 import StudentTable from "./components/studentTable";
+
 //import AdminTable2 from "./sampleTable";
 
 import "./index.css";
@@ -20,8 +21,22 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* <Route path="/km" exact element={<AdminTable2 />} /> */}
-        <Route path="/studentmarks" exact element={<StudentTable />} />
+        {/* <Route path="/studentmarks" exact element={<StudentTable />} /> */}
+        <Route
+          path="/studentmarks"
+          exact
+          element={
+            role === "student" ? (
+              <ProtectedRoute>
+                <StudentTable />
+              </ProtectedRoute>
+            ) : (
+              <AdminProtectedRoute>
+                <Home />
+              </AdminProtectedRoute>
+            )
+          }
+        />
         <Route
           path="/"
           exact

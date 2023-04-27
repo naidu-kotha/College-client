@@ -129,7 +129,6 @@ function MyVerticallyCenteredModal(props) {
                   {...formik.getFieldProps("gender")}
                   isInvalid={formik.touched.gender && formik.errors.gender}
                 >
-                  <option value="">-- Select --</option>
                   <option value="male">Male</option>
                   <option value="female">Female</option>
                 </Form.Control>

@@ -16,6 +16,7 @@ import "react-toastify/dist/ReactToastify.css";
 import "./index.css";
 import axios from "axios";
 import Sidebar1 from "../SampleSideBar";
+import Spinner from "react-bootstrap/Spinner";
 import Cookies from "js-cookie";
 
 function AdminTable() {
@@ -23,13 +24,14 @@ function AdminTable() {
   const [inviteModal, setInviteModal] = useState(false);
   const [studentList, setStudentList] = useState([]);
   const [showToast, setShowToast] = useState(false);
-
+  const [spinnerStatus, setSpinnerStatus] = useState(false);
   const [activePage, setActivePage] = useState(1);
   const [selectedMail, setSelectedMail] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
-  //const [filteredStudentList, setFilteredStudentList] = useState([]);
+  const [isChecked, setIsChecked] = useState(false);
   const ITEMS_PER_PAGE = 5;
   const testId = Cookies.get("testId");
+  const today = new Date().toLocaleDateString("en-GB");
 
   const onclickInvite = (email) => {
     toggleInviteModal();
@@ -39,8 +41,9 @@ function AdminTable() {
   const sendInvite = () => {
     const email = selectedMail;
     const link = "http://192.168.1.249:3000";
+
     console.log(email, link);
-    const body = { to: email, link, testId };
+    const body = { to: email, link, testId, testDate: today };
     console.log(body);
     axios
       .post("/sendmail", body)
@@ -82,24 +85,39 @@ function AdminTable() {
   };
 
   useEffect(() => {
+    setSpinnerStatus(true);
+
     axios
-      .get("/getstudents")
+      .post("/getstudents")
       .then((response) => {
         console.log(response);
         setStudentList(response.data);
       })
-      .catch((e) => {
-        console.log(e);
+      .catch((error) => {
+        console.log(error);
+      })
+      .finally(() => {
+        setSpinnerStatus(false);
       });
   }, [showToast]);
+
+  const onChangeChecked = (event) => {
+    setIsChecked(event.target.checked);
+  };
 
   const handleSearch = (event) => {
     setSearchQuery(event.target.value);
   };
 
-  const filteredStudentList = studentList.filter((student) =>
+  let filteredStudentList = studentList.filter((student) =>
     student.fullname.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  if (isChecked) {
+    filteredStudentList = filteredStudentList.filter(
+      (student) => student.invite === false
+    );
+  }
 
   const indexOfLastItem = activePage * ITEMS_PER_PAGE;
   const indexOfFirstItem = indexOfLastItem - ITEMS_PER_PAGE;
@@ -148,6 +166,7 @@ function AdminTable() {
 
     return [prevButton, pageNumbers, nextButton];
   };
+
   return (
     <Container fluid className="d-flex flex-row">
       <Sidebar1 />
@@ -164,13 +183,6 @@ function AdminTable() {
           >
             Add Student
           </Button>
-          {/* <Button
-            className="admin-addstudent-btn"
-            variant="primary"
-            onClick={() => setModalShow(true)}
-          >
-            Add Student
-          </Button> */}
         </Container>
 
         <MyVerticallyCenteredModal
@@ -178,60 +190,83 @@ function AdminTable() {
           onHide={() => setModalShow(false)}
         />
         <Container fluid className="admin-table-align">
-          <Form className=" mb-3 admin-table-search-input">
-            <FormControl
-              type="text"
-              placeholder="Search by student name"
-              className="mr-sm-2"
-              value={searchQuery}
-              onChange={handleSearch}
-            />
-          </Form>
-          <Table
-            responsive
-            striped
-            bordered
-            hover
-            className="admin-table admin-nowrap"
-          >
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Student Name</th>
-                <th>Gender</th>
-                <th>Email</th>
-                <th>Date of Birth</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentItems.map((item) => (
-                <tr key={item.id}>
-                  <td>{item.id}</td>
-                  <td>{item.fullname}</td>
-                  <td>{item.gender}</td>
-                  <td>{item.email}</td>
-                  <td>
-                    {new Date(item.date_of_birth).toLocaleDateString("en-GB")}
-                  </td>
-                  <td>
-                    {item.invite === false ? (
-                      <Button
-                        variant="primary"
-                        onClick={() => onclickInvite(item.email)}
-                      >
-                        Invite
-                      </Button>
-                    ) : (
-                      <Button variant="primary" disabled>
-                        Invite
-                      </Button>
-                    )}
-                  </td>
+          <Container fluid>
+            <Form className=" mb-3 d-flex flex-row align-items-center">
+              <FormControl
+                type="text"
+                placeholder="Search by student name"
+                className="mr-sm-2 admin-table-search-input"
+                value={searchQuery}
+                onChange={handleSearch}
+              />
+
+              <Form.Check
+                checked={isChecked}
+                type="checkbox"
+                label="Non Invites List"
+                onChange={onChangeChecked}
+                className="admin-table-checkbox-input "
+              />
+            </Form>
+          </Container>
+
+          {spinnerStatus ? (
+            <Container className="spinner-container">
+              <Spinner
+                className="spinner"
+                animation="border"
+                size="lg"
+                variant="primary"
+              />
+            </Container>
+          ) : (
+            <Table
+              responsive
+              striped
+              bordered
+              hover
+              className="admin-table admin-nowrap"
+            >
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Student Full Name</th>
+                  <th>Gender</th>
+                  <th>Email</th>
+                  <th>Date of Birth</th>
+                  <th>Action</th>
                 </tr>
-              ))}
-            </tbody>
-          </Table>
+              </thead>
+              <tbody>
+                {currentItems.map((item) => (
+                  <tr key={item.id}>
+                    <td>{item.id}</td>
+                    <td>{item.fullname}</td>
+                    <td>{item.gender}</td>
+                    <td>{item.email}</td>
+                    <td>
+                      {new Date(item.date_of_birth).toLocaleDateString("en-GB")}
+                    </td>
+                    <td>
+                      {item.invite === false ? (
+                        <Button
+                          variant="primary"
+                          onClick={() => onclickInvite(item.email)}
+                          key={item.id}
+                        >
+                          Invite
+                        </Button>
+                      ) : (
+                        <Button variant="primary" disabled key={item.id}>
+                          Invite
+                        </Button>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          )}
         </Container>
         <Container fluid className="d-flex justify-content-center">
           <Pagination>{renderPageNumbers()}</Pagination>
@@ -243,253 +278,3 @@ function AdminTable() {
   );
 }
 export default AdminTable;
-
-// import Table from "react-bootstrap/Table";
-// import MyVerticallyCenteredModal from "../AddStudentForm";
-// import SideBar from "../SideBar";
-// import "./index.css";
-// import axios from "axios";
-
-// function AdminTable() {
-//   const [modalShow, setModalShow] = React.useState(false);
-//   const [studentList, setStudentList] = useState([]);
-//   const [sendMailInfo, setSendMailInfo] = useState("");
-//   const [activePage, setActivePage] = useState(1);
-//   const ITEMS_PER_PAGE = 5;
-
-//   const onclickInvite = (email) => {
-//     const link = "http://localhost:3000/quiz";
-//     // console.log(email, link);
-//     const body = { to: email, link };
-//     console.log(body);
-//     axios
-//       .post("/sendmail", body)
-//       .then((response) => {
-//         console.log(response.data);
-//         if (response.statusText === "OK") {
-//           setSendMailInfo(response.data);
-//         }
-//       })
-//       .catch((e) => {
-//         setSendMailInfo(e);
-//       });
-//   };
-//   console.log(sendMailInfo);
-
-//   useEffect(() => {
-//     axios
-//       .get("/getstudents")
-//       .then((response) => {
-//         console.log(response);
-//         setStudentList(response.data);
-//       })
-//       .catch((e) => {
-//         console.log(e);
-//       });
-//   }, []);
-
-//   const indexOfLastItem = activePage * ITEMS_PER_PAGE;
-//   const indexOfFirstItem = indexOfLastItem - ITEMS_PER_PAGE;
-//   const currentItems = studentList.slice(indexOfFirstItem, indexOfLastItem);
-
-//   const renderPageNumbers = () => {
-//     const pageNumbers = [];
-//     for (let i = 1; i <= Math.ceil(studentList.length / ITEMS_PER_PAGE); i++) {
-//       pageNumbers.push(
-//         <Pagination.Item
-//           key={i}
-//           active={i === activePage}
-//           onClick={() => setActivePage(i)}
-//         >
-//           {i}
-//         </Pagination.Item>
-//       );
-//     }
-//     return pageNumbers;
-//   };
-
-//   return (
-//     <Container fluid className="d-flex flex-row">
-//       <SideBar />
-//       <Container fluid className="p-5 admin-table-container">
-//         <Container
-//           fluid
-//           className="d-flex d-row justify-content-between mr-2 mb-4 ml-5"
-//         >
-//           <h1 className="align-center">StudentDetails</h1>
-//           <Button
-//             className="admin-addstudent-btn"
-//             variant="primary"
-//             onClick={() => setModalShow(true)}
-//           >
-//             Add Student
-//           </Button>
-//         </Container>
-
-//         <MyVerticallyCenteredModal
-//           show={modalShow}
-//           onHide={() => setModalShow(false)}
-//         />
-//         <Container fluid className="admin-table-align">
-//           <Table
-//             responsive
-//             striped
-//             bordered
-//             hover
-//             className="admin-table admin-nowrap"
-//           >
-//             <thead>
-//               <tr>
-//                 <th>ID</th>
-//                 <th>Student Name</th>
-//                 <th>Gender</th>
-//                 <th>Email</th>
-//                 <th>Date of Birth</th>
-//                 <th>Action</th>
-//               </tr>
-//             </thead>
-//             <tbody>
-//               {currentItems.map((item) => (
-//                 <tr key={item.id}>
-//                   <td>{item.id}</td>
-//                   <td>{item.fullname}</td>
-//                   <td>{item.gender}</td>
-//                   <td>{item.email}</td>
-//                   <td>
-//                     {new Date(item.date_of_birth).toLocaleDateString("en-GB")}
-//                   </td>
-//                   <td>
-//                     <Button
-//                       variant="primary"
-//                       onClick={() => onclickInvite(item.email)}
-//                     >
-//                       Invite
-//                     </Button>
-//                   </td>
-//                 </tr>
-//               ))}
-//             </tbody>
-//           </Table>
-//         </Container>
-//         <Pagination className="justify-content-center">
-//           {renderPageNumbers()}
-//         </Pagination>
-//       </Container>
-//     </Container>
-//   );
-// }
-
-// export default AdminTable;
-// import { Container, Button } from "react-bootstrap";
-// import React, { useState, useEffect } from "react";
-// import Table from "react-bootstrap/Table";
-// import MyVerticallyCenteredModal from "../AddStudentForm";
-// import SideBar from "../SideBar";
-// import "./index.css";
-// import axios from "axios";
-
-// function AdminTable() {
-//   const [modalShow, setModalShow] = React.useState(false);
-//   const [studentList, setStudentList] = useState([]);
-//   const [sendMailInfo, setSendMailInfo] = useState("");
-
-//   const onclickInvite = (email) => {
-//     const link = "http://localhost:3000/quiz";
-//     // console.log(email, link);
-//     const body = { to: email, link };
-//     console.log(body);
-//     axios
-//       .post("/sendmail", body)
-//       .then((response) => {
-//         console.log(response.data);
-//         if (response.statusText === "OK") {
-//           setSendMailInfo(response.data);
-//         }
-//       })
-//       .catch((e) => {
-//         setSendMailInfo(e);
-//       });
-//   };
-//   console.log(sendMailInfo);
-
-//   useEffect(() => {
-//     axios
-//       .get("/getstudents")
-//       .then((respone) => {
-//         console.log(respone);
-//         setStudentList(respone.data);
-//       })
-//       .catch((e) => {
-//         console.log(e);
-//       });
-//   }, []);
-//   // console.log(studentList);
-//   return (
-//     <Container fluid className="d-flex flex-row">
-//       <SideBar />
-//       <Container fluid className="p-5 admin-table-container">
-//         <Container
-//           fluid
-//           className="d-flex d-row justify-content-between mr-2 mb-4 ml-5"
-//         >
-//           <h1 className="align-center">StudentDetails</h1>
-//           <Button
-//             className="admin-addstudent-btn"
-//             variant="primary"
-//             onClick={() => setModalShow(true)}
-//           >
-//             Add Student
-//           </Button>
-//         </Container>
-
-//         <MyVerticallyCenteredModal
-//           show={modalShow}
-//           onHide={() => setModalShow(false)}
-//         />
-
-//         <Table
-//           responsive
-//           striped
-//           bordered
-//           hover
-//           className="admin-table admin-nowrap"
-//         >
-//           <thead>
-//             <tr>
-//               <th>ID</th>
-//               <th>Student Name</th>
-//               <th>Gender</th>
-//               <th>Email</th>
-//               <th>Date of Birth</th>
-//               <th>Action</th>
-//             </tr>
-//           </thead>
-//           <tbody>
-//             {studentList.map((item) => (
-//               <tr key={item.id}>
-//                 <td>{item.id}</td>
-//                 <td>{item.fullname}</td>
-//                 <td>{item.gender}</td>
-//                 <td>{item.email}</td>
-//                 <td>
-//                   {new Date(item.date_of_birth).toLocaleDateString("en-GB")}
-//                 </td>
-//                 <td>
-//                   <Button
-//                     onClick={() => onclickInvite(item.email)}
-//                     variant="primary"
-//                     className="admin-invite-btn "
-//                   >
-//                     Invite
-//                   </Button>
-//                 </td>
-//               </tr>
-//             ))}
-//           </tbody>
-//         </Table>
-//       </Container>
-//     </Container>
-//   );
-// }
-
-// export default AdminTable;

@@ -18,7 +18,6 @@ function Quiz() {
   const navigate = useNavigate();
   const testName = "SampleTest3";
   Cookies.set("testId", testName, { expires: 10 });
-  const today = new Date();
 
   const questions = [
     {
@@ -119,7 +118,6 @@ function Quiz() {
       testId: testName,
       email: email,
       score: score,
-      testDate: today,
     };
     console.log(submitDetails);
     axios
@@ -199,7 +197,7 @@ function Quiz() {
 
   return (
     <Container fluid>
-      <Profile />
+      {/* <Profile /> */}
       <Container
         fluid
         className="quiz-bg-container d-flex flex-column justify-content-center align-items-center"

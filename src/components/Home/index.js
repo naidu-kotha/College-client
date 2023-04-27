@@ -9,7 +9,7 @@ import "./index.css";
 function Home() {
   const [studentScoresList, setStudentScoresList] = useState([]);
   const [studentList, setStudentList] = useState([]);
-  //const [passedTests, setPassedTests] = useState(0);
+
   const role = Cookies.get("role");
   const { email } = JSON.parse(Cookies.get("userDetails"));
   const data = {
@@ -31,13 +31,13 @@ function Home() {
   const totalInvitesSentObject = studentList.filter(
     (item) => item.invite === true
   );
-  const totalInvitesSentCount = totalInvitesSentObject.length;
+  const totalInvitesSentCount = totalInvitesSentObject?.length;
 
   const totalNonInvites = totalStudents - totalInvitesSentCount;
 
   useEffect(() => {
     axios
-      .get("/getstudents")
+      .post("/getstudents")
       .then((response) => {
         console.log(response);
         setStudentList(response.data);

@@ -114,9 +114,9 @@ function StudentTable() {
             </tbody>
           </Table>
         </Container>
-        {/* <Container fluid className="d-flex justify-content-center">
+        <Container fluid className="d-flex justify-content-center">
           <Pagination>{renderPageNumbers()}</Pagination>
-        </Container> */}
+        </Container>
       </Container>
     </Container>
   );
