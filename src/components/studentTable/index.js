@@ -2,11 +2,13 @@ import { Container, Pagination } from "react-bootstrap";
 import React, { useState, useEffect } from "react";
 import Table from "react-bootstrap/Table";
 import Cookies from "js-cookie";
+import Spinner from "react-bootstrap/Spinner";
 import "./index.css";
 import axios from "axios";
 import Sidebar1 from "../SampleSideBar";
 
 function StudentTable() {
+  const [spinnerStatus, setSpinnerStatus] = useState(false);
   const [studentScoresList, setStudentScoresList] = useState([]);
   const [activePage, setActivePage] = useState(1);
   const { email } = JSON.parse(Cookies.get("userDetails"));
@@ -15,6 +17,7 @@ function StudentTable() {
     email: email,
   };
   useEffect(() => {
+    setSpinnerStatus(true);
     axios
       .post("/getscore", data)
       .then((response) => {
@@ -23,6 +26,9 @@ function StudentTable() {
       })
       .catch((e) => {
         console.log(e);
+      })
+      .finally(() => {
+        setSpinnerStatus(false);
       });
   }, []);
 
@@ -84,36 +90,46 @@ function StudentTable() {
         >
           <h1 className="align-center">Test Details</h1>
         </Container>
-
-        <Container fluid className="admin-table-align">
-          <Table
-            responsive
-            striped
-            bordered
-            hover
-            className="admin-table admin-nowrap"
-          >
-            <thead>
-              <tr>
-                <th>Test Name</th>
-                <th>Test Date</th>
-                <th>Score</th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentItems.map((item) => (
-                <tr key={item.id}>
-                  <td>{item.test_id}</td>
-
-                  <td>
-                    {new Date(item.test_date).toLocaleDateString("en-GB")}
-                  </td>
-                  <td>{item.test_score}</td>
+        {spinnerStatus ? (
+          <Container className="spinner-container">
+            <Spinner
+              className="spinner"
+              animation="border"
+              size="lg"
+              variant="primary"
+            />
+          </Container>
+        ) : (
+          <Container fluid className="admin-table-align">
+            <Table
+              responsive
+              striped
+              bordered
+              hover
+              className="admin-table admin-nowrap"
+            >
+              <thead>
+                <tr>
+                  <th>Test Name</th>
+                  <th>Test Date</th>
+                  <th>Score</th>
                 </tr>
-              ))}
-            </tbody>
-          </Table>
-        </Container>
+              </thead>
+              <tbody>
+                {currentItems.map((item) => (
+                  <tr key={item.id}>
+                    <td>{item.test_id}</td>
+
+                    <td>
+                      {new Date(item.test_date).toLocaleDateString("en-GB")}
+                    </td>
+                    <td>{item.test_score}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </Container>
+        )}
         <Container fluid className="d-flex justify-content-center">
           <Pagination>{renderPageNumbers()}</Pagination>
         </Container>

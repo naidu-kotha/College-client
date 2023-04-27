@@ -18,43 +18,29 @@ function Home() {
   };
   useEffect(() => {
     axios
-      .post("/getscore", data)
+      .post("/passedtests", data)
       .then((response) => {
-        // console.log(response.data);
-        setStudentScoresList(response.data);
+        //console.log(response.data.rows[0]);
+        setStudentScoresList(response.data.rows[0]);
       })
       .catch((e) => {
         console.log(e);
       });
   }, []);
-  const totalStudents = studentList.length;
-
-  const totalInvitesSentObject = studentList.filter(
-    (item) => item.invite === true
-  );
-  const totalInvitesSentCount = totalInvitesSentObject?.length;
-
-  const totalNonInvites = totalStudents - totalInvitesSentCount;
 
   useEffect(() => {
     axios
-      .post("/getstudents")
+      .post("/invitescount", data)
       .then((response) => {
-        console.log(response);
-        setStudentList(response.data);
+        setStudentList(response.data.rows[0]);
+        console.log(response.data.rows[0]);
       })
       .catch((e) => {
         console.log(e);
       });
   }, []);
-
-  const totalTests = studentScoresList.length;
-  const totalpassedTestsCount = studentScoresList.filter(
-    (item) => item.test_score > 2
-  );
-  const totalPassedTest = totalpassedTestsCount.length;
-  // console.log(totalPassedTest);
-
+  const { passed_count, total_tests } = studentScoresList;
+  const { invites_sent, uninvited_count } = studentList;
   return (
     <>
       <Container fluid className="d-flex flex-row">
@@ -73,9 +59,9 @@ function Home() {
                   <h5>Total Invites</h5>
                 )}
                 {role === "student" ? (
-                  <h1>{totalTests}</h1>
+                  <h1>{total_tests}</h1>
                 ) : (
-                  <h1>{totalInvitesSentCount} </h1>
+                  <h1>{invites_sent} </h1>
                 )}
               </Card.Body>
             </Card>
@@ -88,9 +74,9 @@ function Home() {
                   <h5>Total Non Invites</h5>
                 )}
                 {role === "student" ? (
-                  <h1>{totalPassedTest}</h1>
+                  <h1>{passed_count}</h1>
                 ) : (
-                  <h1>{totalNonInvites}</h1>
+                  <h1>{uninvited_count}</h1>
                 )}
               </Card.Body>
             </Card>

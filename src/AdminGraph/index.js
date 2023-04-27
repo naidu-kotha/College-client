@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-// import Cookies from "js-cookie";
+import Spinner from "react-bootstrap/Spinner";
 import { Container } from "react-bootstrap";
 import "./index.css";
 import {
@@ -15,8 +15,10 @@ import {
 
 const AdminGraph = () => {
   const [studentList, setStudentList] = useState([]);
+  const [spinnerStatus, setSpinnerStatus] = useState(false);
 
   useEffect(() => {
+    setSpinnerStatus(true);
     axios
       .post("/getstudentscount/")
       .then((response) => {
@@ -25,58 +27,72 @@ const AdminGraph = () => {
       })
       .catch((e) => {
         console.log(e);
+      })
+      .finally(() => {
+        setSpinnerStatus(false);
       });
   }, []);
 
   return (
     <Container
       fluid
-      className="charts-bg-container d-flex flex-row justify-content-center"
+      className="admin-graph-bg-container d-flex flex-row justify-content-center"
     >
-      <ResponsiveContainer width="50%" height={300}>
-        <BarChart
-          data={studentList}
-          margin={{
-            top: 10,
-          }}
-        >
-          <Tooltip />
-          <XAxis
-            dataKey="test_id"
-            tick={{
-              stroke: "gray",
-              strokeWidth: 0.5,
-              fontSize: 14,
+      {spinnerStatus ? (
+        <Container className="spinner-container">
+          <Spinner
+            className="spinner"
+            animation="border"
+            size="lg"
+            variant="primary"
+          />
+        </Container>
+      ) : (
+        <ResponsiveContainer width="50%" height={300}>
+          <BarChart
+            data={studentList}
+            margin={{
+              top: 10,
             }}
-            interval={0}
-          />
-          <YAxis
-            width={60}
-            tick={{
-              stroke: "gray",
-              strokeWidth: 0.5,
-              fontSize: 14,
-            }}
-            domain={[
-              0,
-              Math.max(...studentList.map((data) => data.total_passed)) + 1,
-            ]}
-            interval={0}
-          />
-          <Legend
-            wrapperStyle={{
-              padding: 20,
-            }}
-          />
-          <Bar
-            dataKey="total_passed"
-            name="QUALIFIED STUDENTS"
-            fill="#193be3"
-            minBarSize={20}
-            maxBarSize={60}
-          />
-        </BarChart>
-      </ResponsiveContainer>
+          >
+            <Tooltip />
+            <XAxis
+              dataKey="test_id"
+              tick={{
+                stroke: "gray",
+                strokeWidth: 0.5,
+                fontSize: 14,
+              }}
+              interval={0}
+            />
+            <YAxis
+              width={60}
+              tick={{
+                stroke: "gray",
+                strokeWidth: 0.5,
+                fontSize: 14,
+              }}
+              domain={[
+                0,
+                Math.max(...studentList.map((data) => data.total_passed)) + 1,
+              ]}
+              interval={0}
+            />
+            <Legend
+              wrapperStyle={{
+                padding: 20,
+              }}
+            />
+            <Bar
+              dataKey="total_passed"
+              name="QUALIFIED STUDENTS"
+              fill="#193be3"
+              minBarSize={20}
+              maxBarSize={60}
+            />
+          </BarChart>
+        </ResponsiveContainer>
+      )}
     </Container>
   );
 };

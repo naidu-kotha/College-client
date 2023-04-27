@@ -56,12 +56,12 @@ function App() {
           path="/admintable"
           exact
           element={
-            role !== "admin" ? (
-              <NotFound />
-            ) : (
+            role === "admin" ? (
               <AdminProtectedRoute>
                 <AdminTable />
               </AdminProtectedRoute>
+            ) : (
+              <NotFound />
             )
           }
         />
