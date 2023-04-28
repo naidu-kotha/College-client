@@ -12,10 +12,10 @@ const AdminProtectedRoute = (props) => {
       setIsLoggedIn(false);
       return navigate("/login");
     }
-    setIsLoggedIn(true);
     if (isLoggedIn && role !== "admin") {
       return navigate("/");
     }
+    setIsLoggedIn(true);
   };
 
   useEffect(() => {

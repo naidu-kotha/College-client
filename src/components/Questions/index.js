@@ -125,7 +125,9 @@ function Quiz() {
           console.log(response.data);
           Cookies.remove("jwt_token");
           Cookies.remove("email");
-          navigate("/submitsuccess", { replace: true });
+          setTimeout(() => {
+            navigate("/submitsuccess", { replace: true });
+          }, 2000);
         }
       })
       .catch((e) => {
@@ -135,18 +137,22 @@ function Quiz() {
           setErrorMsg("you have already completed this test");
         }
       });
+    Cookies.remove("questionIndex");
   };
 
   const handlePreviousQuestion = () => {
     setQuestionIndex(questionIndex - 1);
+    // Cookies.set("questionIndex", questionIndex);
   };
 
   const handleNextQuestion = (event) => {
     event.preventDefault();
     setQuestionIndex(questionIndex + 1);
+    // Cookies.set("questionIndex", questionIndex);
   };
 
   useEffect(() => {
+    // const Index = Cookies.get("questionIndex");
     setCurrentQuestion(questions[questionIndex]);
     setSelectedOption(answersObj[questionIndex + 1] || null);
   }, [questionIndex]);
@@ -174,7 +180,7 @@ function Quiz() {
   };
 
   return (
-    <Container fluid className="quiz  -total-container">
+    <Container fluid className="quiz-total-container">
       <Container
         fluid
         className="quiz-bg-container d-flex flex-column justify-content-center align-items-center"
@@ -183,15 +189,14 @@ function Quiz() {
           className="d-flex flex-row justify-content-center align-items-center question-form-container"
           onSubmit={handleSubmit}
         >
-          <Button
+          <button
             className="form-btns"
-            variant="primary"
-            size={"lg"}
+            type="button"
             onClick={handlePreviousQuestion}
             disabled={questionIndex === 0}
           >
             <i className="bi bi-arrow-left"></i>
-          </Button>
+          </button>
           <Container fluid className="m-5">
             <h1 className="question-heading">{currentQuestion.text}</h1>
             {currentQuestion.options.map((option) => (
@@ -210,16 +215,15 @@ function Quiz() {
 
           <div className="mt-2 d-flex justify-content-between">
             {questionIndex < questions.length - 1 ? (
-              <Button
-                size={"lg"}
+              <button
                 type="button"
                 className="form-btns"
                 onClick={handleNextQuestion}
               >
                 <i className="bi bi-arrow-right"></i>
-              </Button>
+              </button>
             ) : (
-              <Button className="primary" size={"lg"} type="submit">
+              <Button className="primary" size={"md"} type="submit">
                 Submit
               </Button>
             )}

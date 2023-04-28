@@ -42,14 +42,16 @@ function AdminTable() {
     setSelectedMail(email);
   };
 
-  const onclickDeleteStudent = (email) => {
+  const onClickDeleteStudent = (email) => {
     console.log({ email });
     axios
-      .delete("/deletestudent", { email })
+      .delete("/deletestudent", { params: { email: `${email}` } })
       .then((response) => {
         console.log(response);
         if (response.statusText === "OK") {
           console.log(response.data);
+          toast.success("Student deleted");
+          setShowToast(!showToast);
         }
       })
       .catch((e) => {
@@ -341,7 +343,7 @@ function AdminTable() {
                     </td>
                     <td>
                       <Button
-                        onClick={() => onclickDeleteStudent(item.email)}
+                        onClick={() => onClickDeleteStudent(item.email)}
                         variant="none"
                       >
                         <AiOutlineDelete size={22} />

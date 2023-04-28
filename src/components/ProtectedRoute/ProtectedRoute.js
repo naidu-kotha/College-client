@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import { replace } from "formik";
 
 const ProtectedRoute = (props) => {
   const role = Cookies.get("role");
@@ -12,7 +13,7 @@ const ProtectedRoute = (props) => {
       setIsLoggedIn(false);
       return navigate("/login");
     }
-    if (isLoggedIn && role === "admin") {
+    if (isLoggedIn && role !== "student") {
       return navigate("/");
     }
     setIsLoggedIn(true);

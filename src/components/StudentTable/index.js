@@ -88,7 +88,7 @@ function StudentTable() {
           fluid
           className="d-flex d-row justify-content-between mr-2 mb-4 ml-5"
         >
-          <h1 className="align-center">Test Details</h1>
+          <h1 className="align-center">Student Marks</h1>
         </Container>
         {spinnerStatus ? (
           <Container className="spinner-container">

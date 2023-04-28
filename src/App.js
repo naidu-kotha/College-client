@@ -1,6 +1,6 @@
 // eslint-disable-next-line
 import React from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LoginPage from "./components/LoginPage";
 import Home from "./components/Home";
 import AdminTable from "./components/AdminTable";
@@ -11,9 +11,7 @@ import AdminProtectedRoute from "./components/AdminProtectedRoute/AdminProtected
 import QuizProtectedRoute from "./components/QuizProtectedRoute";
 import SubmitPage from "./components/SubmitPage";
 
-import StudentTable from "./components/studentTable";
-
-//import AdminTable2 from "./sampleTable";
+import StudentTable from "./components/StudentTable";
 
 import "./index.css";
 import Cookies from "js-cookie";
@@ -50,7 +48,9 @@ function App() {
                 <StudentTable />
               </ProtectedRoute>
             ) : (
-              <Navigate to="/notfound" />
+              <AdminProtectedRoute>
+                <Home />
+              </AdminProtectedRoute>
             )
           }
         />
@@ -63,7 +63,9 @@ function App() {
                 <AdminTable />
               </AdminProtectedRoute>
             ) : (
-              <Navigate to="/notfound" />
+              <ProtectedRoute>
+                <Home />
+              </ProtectedRoute>
             )
           }
         />
