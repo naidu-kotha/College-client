@@ -107,7 +107,6 @@ function AdminTable() {
 
   useEffect(() => {
     setSpinnerStatus(true);
-
     axios
       .post("/getstudents")
       .then((response) => {
@@ -128,11 +127,24 @@ function AdminTable() {
 
   const handleSearch = (event) => {
     setSearchQuery(event.target.value);
+    const searchText = event.target.value;
+    if (searchText.length >= 3 || searchText === "") {
+      axios
+        .post("/getstudents/", { searchText })
+        .then((response) => {
+          console.log(response);
+          setStudentList(response.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   };
 
-  let filteredStudentList = studentList.filter((student) =>
-    student.fullname.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  let filteredStudentList = studentList;
+  // .filter((student) =>
+  //   student.fullname.toLowerCase().includes(searchQuery.trim().toLowerCase())
+  // );
 
   if (isChecked) {
     filteredStudentList = filteredStudentList.filter(

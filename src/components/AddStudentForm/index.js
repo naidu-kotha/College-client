@@ -9,10 +9,12 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const SignupSchema = Yup.object().shape({
-  username: Yup.string().required("Required"),
+  username: Yup.string()
+    .required("Required")
+    .matches("^[a-zA-Z]+$", "Spaces are not accepted"),
   fullname: Yup.string()
     .required("Required")
-    .matches("^[a-zA-Z]+(?:[ ]?[a-zA-Z]+)*$", "needed alphabets only"),
+    .matches("^[a-zA-Z]+(?:[ ]?[a-zA-Z]+)*$", "Enter alphabets only"),
   email: Yup.string()
     .email("Invalid email")
     .required("Required")
@@ -26,6 +28,11 @@ const SignupSchema = Yup.object().shape({
 function MyVerticallyCenteredModal(props) {
   const [errorMsg, setErrorMsg] = useState("");
   const navigate = useNavigate();
+
+  const resetForm = () => {
+    formik.resetForm();
+  };
+
   const formik = useFormik({
     initialValues: {
       username: "",
@@ -44,20 +51,25 @@ function MyVerticallyCenteredModal(props) {
             formik.resetForm();
             toast.success("Student added successfully");
             props.onHide(false);
-            navigate("/admintable", { replace: true });
+            navigate("/", { replace: true });
           }
         })
         .catch((e) => {
           // console.log(e);
           const data = e.response.data;
           console.log(data);
+
+          formik.resetForm();
           if (data.constraint === "user_details_email_key") {
-            setErrorMsg(
+            // setErrorMsg(
+
+            // );
+            toast.warning(
               "Email already exists. Please try with a different Email"
             );
           }
           if (data.constraint === "user_details_username_key") {
-            setErrorMsg(
+            toast.warning(
               "Username already exists. Please try with a different Username"
             );
           }
