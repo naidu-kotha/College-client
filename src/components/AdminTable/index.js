@@ -42,6 +42,21 @@ function AdminTable() {
     setSelectedMail(email);
   };
 
+  const onclickDeleteStudent = (email) => {
+    console.log({ email });
+    axios
+      .delete("/deletestudent", { email })
+      .then((response) => {
+        console.log(response);
+        if (response.statusText === "OK") {
+          console.log(response.data);
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+
   const sendInvite = () => {
     const email = selectedMail;
     const link = "http://192.168.1.249:3000";
@@ -325,7 +340,10 @@ function AdminTable() {
                       )}
                     </td>
                     <td>
-                      <Button variant="none">
+                      <Button
+                        onClick={() => onclickDeleteStudent(item.email)}
+                        variant="none"
+                      >
                         <AiOutlineDelete size={22} />
                       </Button>
                     </td>
