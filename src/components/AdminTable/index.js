@@ -9,6 +9,7 @@ import {
   FormControl,
 } from "react-bootstrap";
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import Table from "react-bootstrap/Table";
 import MyVerticallyCenteredModal from "../AddStudentForm";
 import { ToastContainer, toast } from "react-toastify";
@@ -34,7 +35,7 @@ function AdminTable() {
   const [sortColumn, setSortColumn] = useState(null);
   const [sortOrder, setSortOrder] = useState(null);
   const ITEMS_PER_PAGE = 5;
-  const testId = Cookies.get("testId");
+  const testId = "Test-2";
   const today = format(new Date(), "yyyy-MM-dd");
 
   const onclickInvite = (email) => {
@@ -61,7 +62,7 @@ function AdminTable() {
 
   const sendInvite = () => {
     const email = selectedMail;
-    const link = "http://192.168.1.249:3000";
+    const link = "http://192.168.0.41:3000/quiz";
 
     console.log(email, link);
     const body = { to: email, link, testId, testDate: today };
@@ -284,7 +285,7 @@ function AdminTable() {
               <thead>
                 <tr>
                   <th onClick={() => handleSort("id")}>
-                    ID{" "}
+                    ID
                     {sortColumn === "id" && (
                       <i
                         className={`fa fa-arrow-${
@@ -294,7 +295,7 @@ function AdminTable() {
                     )}
                   </th>
                   <th onClick={() => handleSort("fullname")}>
-                    Student Full Name{" "}
+                    Student Full Name
                     {sortColumn === "fullname" && (
                       <i
                         className={`fa fa-arrow-${
@@ -305,7 +306,7 @@ function AdminTable() {
                   </th>
                   <th>Gender</th>
                   <th onClick={() => handleSort("email")}>
-                    Email{" "}
+                    Email
                     {sortColumn === "email" && (
                       <i
                         className={`fa fa-arrow-${
@@ -315,7 +316,7 @@ function AdminTable() {
                     )}
                   </th>
                   <th onClick={() => handleSort("date_of_birth")}>
-                    Date of Birth{" "}
+                    Date of Birth
                     {sortColumn === "date_of_birth" && (
                       <i
                         className={`fa fa-arrow-${
@@ -332,7 +333,14 @@ function AdminTable() {
                 {sortedData.map((item) => (
                   <tr key={item.id}>
                     <td>{item.id}</td>
-                    <td>{item.fullname}</td>
+                    <td>
+                      <Link
+                        className="student-link"
+                        to={`../studentmarks/?email=${item.email}`}
+                      >
+                        {item.fullname}
+                      </Link>
+                    </td>
                     <td>{item.gender}</td>
                     <td>{item.email}</td>
                     <td>

@@ -41,17 +41,17 @@ function App() {
 
         <Route
           path="/studentmarks"
-          exact
+          // exact
           element={
-            role === "student" ? (
-              <ProtectedRoute>
-                <StudentTable />
-              </ProtectedRoute>
-            ) : (
-              <AdminProtectedRoute>
-                <Home />
-              </AdminProtectedRoute>
-            )
+            // role === "student" ? (
+            // <ProtectedRoute>
+            <StudentTable />
+            // </ProtectedRoute>
+            // ) : (
+            //   <ProtectedRoute>
+            //     <StudentTable />
+            //   </ProtectedRoute>
+            // )
           }
         />
         <Route

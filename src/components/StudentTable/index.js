@@ -13,8 +13,15 @@ function StudentTable() {
   const [activePage, setActivePage] = useState(1);
   const { email } = JSON.parse(Cookies.get("userDetails"));
   const ITEMS_PER_PAGE = 5;
+
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  const address = urlParams.get("email");
+
+  console.log(email);
+
   const data = {
-    email: email,
+    email: address || email,
   };
   useEffect(() => {
     setSpinnerStatus(true);
@@ -99,40 +106,49 @@ function StudentTable() {
               variant="primary"
             />
           </Container>
-        ) : (
-          <Container fluid className="admin-table-align">
-            <Table
-              responsive
-              striped
-              bordered
-              hover
-              className="admin-table admin-nowrap"
-            >
-              <thead>
-                <tr>
-                  <th>Test Name</th>
-                  <th>Test Date</th>
-                  <th>Score</th>
-                </tr>
-              </thead>
-              <tbody>
-                {currentItems.map((item) => (
-                  <tr key={item.id}>
-                    <td>{item.test_id}</td>
-
-                    <td>
-                      {new Date(item.test_date).toLocaleDateString("en-GB")}
-                    </td>
-                    <td>{item.test_score}</td>
+        ) : currentItems.length > 0 ? (
+          <>
+            <Container fluid className="admin-table-align">
+              <Table
+                responsive
+                striped
+                bordered
+                hover
+                className="admin-table admin-nowrap"
+              >
+                <thead>
+                  <tr>
+                    <th>Test Name</th>
+                    <th>Test Date</th>
+                    <th>Score</th>
                   </tr>
-                ))}
-              </tbody>
-            </Table>
+                </thead>
+                <tbody>
+                  {currentItems.map((item) => (
+                    <tr key={item.id}>
+                      <td>{item.test_id}</td>
+
+                      <td>
+                        {new Date(item.test_date).toLocaleDateString("en-GB")}
+                      </td>
+                      <td>{item.test_score}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            </Container>
+            <Container fluid className="d-flex justify-content-center">
+              <Pagination>{renderPageNumbers()}</Pagination>
+            </Container>
+          </>
+        ) : (
+          <Container
+            fluid
+            className="d-flex d-row align-items-center h-75 justify-content-center"
+          >
+            <h3>No Exams Taken</h3>
           </Container>
         )}
-        <Container fluid className="d-flex justify-content-center">
-          <Pagination>{renderPageNumbers()}</Pagination>
-        </Container>
       </Container>
     </Container>
   );
