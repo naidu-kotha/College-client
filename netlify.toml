@@ -1,0 +1,5 @@
+[[redirects]]
+  from = "/*"
+  to = "https://college-test-server.onrender.com/:splat"
+  status = 200
+  force = true

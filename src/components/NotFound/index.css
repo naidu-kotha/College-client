@@ -1,0 +1,20 @@
+.not-found-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 70vh;
+  }
+  
+  .not-found-img {
+    width: 400px;
+  }
+  .home-btn-shop{
+    background-color: #1363DF;
+    color: #ffffff;
+    margin-top: 20px;
+    width: 100px;
+    height: 40px;
+    border: none;
+    border-radius: 5px;
+}
